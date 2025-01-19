@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication</title>
+</head>
+<body>
+    <h1>User Authentication</h1>
+
+    <div>
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Name" required /><br />
+            <input type="email" id="email" placeholder="Email" required /><br />
+            <input type="password" id="password" placeholder="Password" required /><br />
+            <input type="text" id="phone" placeholder="Phone" required /><br />
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required /><br />
+            <input type="password" id="loginPassword" placeholder="Password" required /><br />
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Profile</h2>
+        <button id="viewProfile">View Profile</button>
+        <button id="deactivateAccount">Deactivate Account</button>
+        <pre id="profileData"></pre>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
