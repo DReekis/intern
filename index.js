@@ -1,7 +1,4 @@
 const cors = require('cors');
-
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -9,25 +6,23 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
-// Load environment variables
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware for parsing JSON
+
 app.use(express.json());
 app.use(cors());
 
 
-// Database connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected successfully.'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// Models
 const User = mongoose.model('User', new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
@@ -37,13 +32,13 @@ const User = mongoose.model('User', new mongoose.Schema({
     isAdmin: { type: Boolean, default: false },
 }));
 
-// Middleware for authentication
+
 const authenticate = async (req, res, next) => {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET); 
         req.user = decoded;
         next();
     } catch (err) {
@@ -51,8 +46,8 @@ const authenticate = async (req, res, next) => {
     }
 };
 
-// Routes
-// User registration
+
+
 app.post('/api/user/register', [
     body('email').isEmail(),
     body('password').isLength({ min: 8 })
@@ -77,7 +72,7 @@ app.post('/api/user/register', [
     }
 });
 
-// User login
+
 app.post('/api/user/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -95,7 +90,7 @@ app.post('/api/user/login', async (req, res) => {
     }
 });
 
-// Get user profile
+
 app.get('/api/user/profile', authenticate, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
@@ -107,7 +102,7 @@ app.get('/api/user/profile', authenticate, async (req, res) => {
     }
 });
 
-// Update user profile
+
 app.put('/api/user/profile', authenticate, async (req, res) => {
     const { name, phone } = req.body;
 
@@ -121,7 +116,7 @@ app.put('/api/user/profile', authenticate, async (req, res) => {
     }
 });
 
-// Deactivate user account
+
 app.delete('/api/user/deactivate', authenticate, async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.user.id, { isActive: false }, { new: true });
@@ -133,7 +128,7 @@ app.delete('/api/user/deactivate', authenticate, async (req, res) => {
     }
 });
 
-// Admin: Get all users
+
 app.get('/api/admin/users', authenticate, async (req, res) => {
     if (!req.user.isAdmin) return res.status(403).json({ message: 'Access denied.' });
 
@@ -145,10 +140,10 @@ app.get('/api/admin/users', authenticate, async (req, res) => {
     }
 });
 
-// Default route for root path
+
 app.get('/', (req, res) => {
     res.send('Welcome to the User Management System API! Use /api/user or /api/admin endpoints.');
 });
 
-// Start server
+
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

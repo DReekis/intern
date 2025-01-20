@@ -1,6 +1,5 @@
 const API_URL = 'http://localhost:3000/api';
 
-// Handle user registration
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
@@ -21,7 +20,6 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     }
 });
 
-// Handle user login
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
@@ -45,7 +43,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Handle viewing profile
 document.getElementById('viewProfile').addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     if (!token) return alert('Please log in first.');
@@ -62,7 +59,6 @@ document.getElementById('viewProfile').addEventListener('click', async () => {
     }
 });
 
-// Handle account deactivation
 document.getElementById('deactivateAccount').addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     if (!token) return alert('Please log in first.');
